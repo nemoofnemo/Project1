@@ -1,4 +1,6 @@
 #include "head.h"
+using std::list;
+
 constexpr size_t SIZE = 10;
 
 void swapInt(int* pa, int* pb) {
@@ -43,6 +45,10 @@ void funcSort2(int* const arr, const size_t size) {
 	}
 }
 
+void funcHeapSort(int* const arr, const size_t size) {
+	list<int> stack;
+}
+
 void funcRandArr(int* const arr, const size_t size) {
 	for (size_t i = 0; i < size; i++) {
 		arr[i] = rand() % 100;
@@ -56,7 +62,7 @@ void funcShowArray(const int* const arr, const size_t size) {
 	putchar('\n');
 }
 
-bool checkArr(const int* const arr1, const int* const arr2, const size_t size) {
+void checkArr(const int* const arr1, const int* const arr2, const size_t size) {
 	size_t d = 0;
 	for (size_t i = 0; i < size; i++) {
 		for (d = 0; d < size; d++) {
@@ -65,28 +71,34 @@ bool checkArr(const int* const arr1, const int* const arr2, const size_t size) {
 			}
 		}
 		if (d == size) {
-			printf("fault at %u\n", i);
-			return false;
+			printf("result: fault at %u\n", i);
+			return;
 		}
 	}
-	return true;
+	printf("result: true\n");
 }
 
-int main(void) {
+void showTime() {
 	time_t t = time(NULL);
 	tm s_tm;
 	localtime_s(&s_tm, &t);
 	char timeString[50];
 	asctime_s(timeString, 50, &s_tm);
 	puts(timeString);
+}
 
+void sortTest() {
 	size_t size = SIZE;
 	int* arr = (int*)calloc(size, sizeof(int));
 	int* arrBack = (int*)calloc(size, sizeof(int));
-	if (!arr || !arrBack)
-		return -1;
 
-	srand((unsigned int)t);
+	if (!arr || !arrBack) {
+		puts("fetal error at sortTest");
+		return;
+	}
+
+	srand((unsigned int)time(NULL));
+
 	puts("s1");
 	srand(abs(rand()));
 	funcRandArr(arr, size);
@@ -94,7 +106,7 @@ int main(void) {
 	funcShowArray(arr, size);
 	funcSort1(arr, size);
 	funcShowArray(arr, size);
-	printf("result: %s\n", checkArr(arr, arrBack, size) ? "true" : "false");
+	checkArr(arr, arrBack, size);
 
 	puts("s2");
 	srand(abs(rand()));
@@ -103,9 +115,14 @@ int main(void) {
 	funcShowArray(arr, size);
 	funcSort2(arr, size);
 	funcShowArray(arr, size);
-	printf("result: %s\n", checkArr(arr, arrBack, size) ? "true" : "false");
+	checkArr(arr, arrBack, size);
 
 	free(arr);
 	free(arrBack);
+}
+
+int main(void) {
+	showTime();
+	sortTest();
 	return 0;
 }

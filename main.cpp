@@ -12,6 +12,13 @@ void swapInt(int* pa, int* pb) {
 	*pb = tmp;
 }
 
+void funcShowArray(const int* const arr, const size_t size) {
+	for (size_t i = 0; i < size; i++) {
+		printf("%d ", *(arr + i));
+	}
+	putchar('\n');
+}
+
 void funcSort1(int* const arr, const size_t size) {
 	if (!arr || size < 2)
 		return;
@@ -46,20 +53,49 @@ void funcSort2(int* const arr, const size_t size) {
 }
 
 void funcHeapSort(int* const arr, const size_t size) {
-	list<int> stack;
+	if (!arr || size < 2)
+		return;
+
+	list<size_t> stack;
+	puts("--");
+	for (size_t i = 1; i < size; i++) {
+		long curRoot = i % 2 == 0 ? (i - 2) / 2 : (i - 1) / 2;
+		stack.push_back(curRoot);
+		funcShowArray(arr, size);
+		while (stack.size()) {
+			curRoot = stack.back();
+			stack.pop_back();
+
+			size_t cLeft = 2 * curRoot + 1;
+			size_t cRight = 2 * curRoot + 2;
+			long target = curRoot % 2 == 0 ? (curRoot - 2) / 2 : (curRoot - 1) / 2;
+
+			if (cRight < size) {
+				if (arr[cRight] < arr[cLeft])
+					swapInt(arr + cRight, arr + cLeft);
+
+				if (arr[cLeft] < arr[curRoot]) {
+					swapInt(arr + cLeft, arr + curRoot);
+				}
+			}
+			else if (cRight >= size && cLeft < size) {
+				if (arr[cLeft] < arr[curRoot]) {
+					swapInt(arr + cLeft, arr + curRoot);
+				}
+			}
+
+			if (curRoot != 0 && target >= 0) {
+				stack.push_back(target);
+			}
+		}
+	}
+	puts("--");
 }
 
 void funcRandArr(int* const arr, const size_t size) {
 	for (size_t i = 0; i < size; i++) {
 		arr[i] = rand() % 100;
 	}
-}
-
-void funcShowArray(const int* const arr, const size_t size) {
-	for (size_t i = 0; i < size; i++) {
-		printf("%d ", *(arr + i));
-	}
-	putchar('\n');
 }
 
 void checkArr(const int* const arr1, const int* const arr2, const size_t size) {
@@ -75,6 +111,14 @@ void checkArr(const int* const arr1, const int* const arr2, const size_t size) {
 			return;
 		}
 	}
+
+	for (size_t i = 0; i < size - 1; i++) {
+		if (arr1[i] > arr1[i + 1]) {
+			printf("result: fault at %u\n", i);
+			return;
+		}
+	}
+
 	printf("result: true\n");
 }
 
@@ -99,21 +143,30 @@ void sortTest() {
 
 	srand((unsigned int)time(NULL));
 
-	puts("s1");
-	srand(abs(rand()));
-	funcRandArr(arr, size);
-	memcpy(arrBack, arr, size * sizeof(int));
-	funcShowArray(arr, size);
-	funcSort1(arr, size);
-	funcShowArray(arr, size);
-	checkArr(arr, arrBack, size);
+	//puts("s1");
+	//srand(abs(rand()));
+	//funcRandArr(arr, size);
+	//memcpy(arrBack, arr, size * sizeof(int));
+	//funcShowArray(arr, size);
+	//funcSort1(arr, size);
+	//funcShowArray(arr, size);
+	//checkArr(arr, arrBack, size);
 
-	puts("s2");
+	//puts("s2");
+	//srand(abs(rand()));
+	//funcRandArr(arr, size);
+	//memcpy(arrBack, arr, size * sizeof(int));
+	//funcShowArray(arr, size);
+	//funcSort2(arr, size);
+	//funcShowArray(arr, size);
+	//checkArr(arr, arrBack, size);
+
+	puts("s3");
 	srand(abs(rand()));
 	funcRandArr(arr, size);
 	memcpy(arrBack, arr, size * sizeof(int));
 	funcShowArray(arr, size);
-	funcSort2(arr, size);
+	funcHeapSort(arr, size);
 	funcShowArray(arr, size);
 	checkArr(arr, arrBack, size);
 

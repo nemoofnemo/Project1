@@ -14,7 +14,7 @@ void swapInt(int* pa, int* pb) {
 
 void funcShowArray(const int* const arr, const size_t size) {
 	for (size_t i = 0; i < size; i++) {
-		printf("%d ", *(arr + i));
+		printf("%2d ", *(arr + i));
 	}
 	putchar('\n');
 }
@@ -56,40 +56,45 @@ void funcHeapSort(int* const arr, const size_t size) {
 	if (!arr || size < 2)
 		return;
 
-	list<size_t> stack;
-	puts("--");
-	for (size_t i = 1; i < size; i++) {
-		long curRoot = i % 2 == 0 ? (i - 2) / 2 : (i - 1) / 2;
-		stack.push_back(curRoot);
-		funcShowArray(arr, size);
-		while (stack.size()) {
-			curRoot = stack.back();
-			stack.pop_back();
-
-			size_t cLeft = 2 * curRoot + 1;
-			size_t cRight = 2 * curRoot + 2;
-			long target = curRoot % 2 == 0 ? (curRoot - 2) / 2 : (curRoot - 1) / 2;
-
-			if (cRight < size) {
-				if (arr[cRight] < arr[cLeft])
-					swapInt(arr + cRight, arr + cLeft);
-
-				if (arr[cLeft] < arr[curRoot]) {
-					swapInt(arr + cLeft, arr + curRoot);
+	puts("heap:");
+	for (int i = (size - 1) / 2; i >= 0; i--) {
+		int curRoot = i;
+		while (curRoot < size) {
+			int left = curRoot * 2 + 1;
+			int right = curRoot * 2 + 2;
+			int target;
+			if (right < size) {
+				if (arr[left] > arr[right]) {
+					target = left;
+				}
+				else {
+					target = right;
+				}
+				if (arr[target] > arr[curRoot]) {
+					swapInt(arr + target, arr + curRoot);
+					curRoot = target;
+				}
+				else {
+					break;
 				}
 			}
-			else if (cRight >= size && cLeft < size) {
-				if (arr[cLeft] < arr[curRoot]) {
-					swapInt(arr + cLeft, arr + curRoot);
+			else if (left < size && right >= right) {
+				if (arr[left] > arr[curRoot]) {
+					swapInt(arr + left, arr + curRoot);
 				}
+				break;
 			}
-
-			if (curRoot != 0 && target >= 0) {
-				stack.push_back(target);
+			else {
+				break;
 			}
+			break;
 		}
+
 	}
-	puts("--");
+
+	funcShowArray(arr, size);
+	puts("sort:");
+	
 }
 
 void funcRandArr(int* const arr, const size_t size) {
@@ -167,7 +172,7 @@ void sortTest() {
 	memcpy(arrBack, arr, size * sizeof(int));
 	funcShowArray(arr, size);
 	funcHeapSort(arr, size);
-	funcShowArray(arr, size);
+	//funcShowArray(arr, size);
 	checkArr(arr, arrBack, size);
 
 	free(arr);

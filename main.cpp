@@ -116,6 +116,37 @@ void funcHeapSort(int* const arr, const size_t size) {
 	}
 }
 
+void funcQuickSort(int* const arr, const size_t size) {
+	if (!arr || size < 2)
+		return;
+
+	int i = 0;
+	int j = size - 1;
+	int temp = arr[0];
+	while (i < j) {
+		while (i < j) {
+			if (arr[j] < temp) {
+				arr[i] = arr[j];
+				i++;
+				break;
+			}
+			j--;
+		}
+		while (i < j) {
+			if (arr[i] > temp) {
+				arr[j] = arr[i];
+				j--;
+				break;
+			}
+			i++;
+		}
+	}
+	arr[i] = temp;
+	funcQuickSort(arr, i);
+	if (i + 1 < size)
+		funcQuickSort(arr + i + 1, size - i - 1);
+}
+
 void funcRandArr(int* const arr, const size_t size) {
 	for (size_t i = 0; i < size; i++) {
 		arr[i] = rand() % 100;
@@ -185,12 +216,21 @@ void sortTest() {
 	//funcShowArray(arr, size);
 	//checkArr(arr, arrBack, size);
 
-	puts("s3");
+	/*puts("s3");
 	srand(abs(rand()));
 	funcRandArr(arr, size);
 	memcpy(arrBack, arr, size * sizeof(int));
 	funcShowArray(arr, size);
 	funcHeapSort(arr, size);
+	funcShowArray(arr, size);
+	checkArr(arr, arrBack, size);*/
+
+	puts("s4");
+	srand(abs(rand()));
+	funcRandArr(arr, size);
+	memcpy(arrBack, arr, size * sizeof(int));
+	funcShowArray(arr, size);
+	funcQuickSort(arr, size);
 	funcShowArray(arr, size);
 	checkArr(arr, arrBack, size);
 

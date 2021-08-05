@@ -73,28 +73,47 @@ void funcHeapSort(int* const arr, const size_t size) {
 				if (arr[target] > arr[curRoot]) {
 					swapInt(arr + target, arr + curRoot);
 					curRoot = target;
+					continue;
 				}
-				else {
-					break;
-				}
+				break;
 			}
 			else if (left < size && right >= right) {
 				if (arr[left] > arr[curRoot]) {
 					swapInt(arr + left, arr + curRoot);
 				}
 				break;
+			} 
+			else
+				break;
+		}
+	}
+	funcShowArray(arr, size);
+	puts("----");
+
+	int limit = size;
+	while (limit > 1) {
+		swapInt(arr, arr + limit - 1);
+		limit--;
+		for (int curRoot = 0; ; ) {
+			int left = curRoot * 2 + 1;
+			int right = curRoot * 2 + 2;
+			if (right < limit) {
+				int  target = arr[left] > arr[right] ? left : right;
+				swapInt(arr + curRoot, arr + target);
+				curRoot = target;
+				continue;
 			}
-			else {
+			else if (left >= limit) {
 				break;
 			}
-			break;
+			else {
+				if (arr[curRoot] < arr[left]) {
+					swapInt(arr + curRoot, arr + left);
+				}
+				break;
+			}
 		}
-
 	}
-
-	funcShowArray(arr, size);
-	puts("sort:");
-	
 }
 
 void funcRandArr(int* const arr, const size_t size) {
@@ -172,7 +191,7 @@ void sortTest() {
 	memcpy(arrBack, arr, size * sizeof(int));
 	funcShowArray(arr, size);
 	funcHeapSort(arr, size);
-	//funcShowArray(arr, size);
+	funcShowArray(arr, size);
 	checkArr(arr, arrBack, size);
 
 	free(arr);
